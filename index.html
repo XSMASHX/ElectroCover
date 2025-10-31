@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Presentación Banda</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Canvas para partículas 3D -->
+  <canvas id="background-canvas"></canvas>
+  
+  <!-- Contenedor del logo -->
+  <div class="container">
+    <div class="logo-wrapper">
+      <img
+        src="assets/Electrocover Logo.png"
+        alt="Ir a módulo"
+        class="clickable-logo"
+        id="logo-navegacion"
+      />
+    </div>
+  </div>
+
+  <!-- Librerías -->
+  <script src="https://cdn.jsdelivr.net/npm/three@0.148.0/build/three.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  
+  <!-- Sistema de partículas 3D -->
+  <script src="bg.js"></script>
+
+  <!-- Navegación -->
+  <script>
+    document.getElementById("logo-navegacion").addEventListener("click", function() {
+      window.location.href = "modulo.html";
+    });
+  </script>
+</body>
+</html>

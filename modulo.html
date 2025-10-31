@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Módulos Interactivos</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js"></script>
+    <link rel="stylesheet" href="modulo.css">
+</head>
+<body>
+    <div id="canvas-container"></div>
+    
+    <div id="hud-info" class="hidden">
+        <h3 id="hud-title">Título</h3>
+        <p id="hud-desc">Descripción del módulo</p>
+        <img id="hud-img" src="" alt="Imagen del módulo">
+    </div>
+    
+    <div id="content-overlay" class="hidden">
+        <div id="content-area">
+            <!-- Aquí se insertará el contenido dinámicamente -->
+        </div>
+    </div>
+    
+    <button id="btn-regresar-menu">Regresar al Menú</button>
+
+    <script src="modulos.js"></script>
+</body>
+</html>

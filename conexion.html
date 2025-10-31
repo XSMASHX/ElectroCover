@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Conéctate con Electro Cover</title>
+  <link rel="stylesheet" href="conexion.css">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="nosotros.css">
+
+</head>
+<body>
+
+  <canvas id="canvas"></canvas>
+
+  <button id="btn-regresar-modulos" class="btn-regresar">← Regresar a Módulos</button>
+
+  <main class="contenedor">
+    <h1>ÚNETE A LA EXPERIENCIA ELECTRO COVER</h1>
+
+<section class="video-presentacion">
+  <video id="videoPromo" loop>
+    <source src="assets/Videos/PROMO ELECTRO COVER WEB 2.mp4" type="video/mp4">
+    Tu navegador no soporta video.
+  </video>
+</section>
+
+<script>
+  // Espera una interacción del usuario para reproducir el video con sonido
+  document.addEventListener('click', function() {
+    const video = document.getElementById('videoPromo');
+    if (video.paused) {
+      video.play();
+    }
+  });
+</script>
+
+
+    <p class="mensaje">
+      Vibramos con la energía de cada beat.  
+      <br>Somos más que música, somos una conexión que enciende emociones.
+    </p>
+
+    <div class="redes">
+      <a href="https://www.instagram.com/electro_cover_?utm_source=ig_web_button_share_sheet&igsh=Y3RybDlwZzh0cGt5" target="_blank">Instagram</a>
+      <a href="https://www.facebook.com/ElectroCover80s" target="_blank">Facebook</a>
+      <a href="https://www.tiktok.com/@electrocover80s?is_from_webapp=1&sender_device=pc" target="_blank">TikTok</a>
+    </div>
+
+    <p class="frase-final">
+      ⚡ Nos vemos en el próximo escenario ⚡
+    </p>
+  </main>
+
+  <script src="biografia.js"></script>
+  <script src="nosotros.js"></script>
+
+</body>
+</html>
