@@ -4,11 +4,14 @@
   "description": "Proyecto Electron - Electrocover",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "create-icon": "node create-icon.js",
+    "start-with-icon": "npm run create-icon && electron ."
   },
   "author": "Kevin",
   "license": "ISC",
   "devDependencies": {
-    "electron": "^33.0.0"
+    "electron": "^33.0.0",
+    "sharp": "^0.33.5"
   }
 }

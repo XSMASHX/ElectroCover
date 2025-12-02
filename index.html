@@ -4,7 +4,35 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Presentación Banda</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    /* Estilo para el mensaje de carga de música */
+    .music-loading {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1000;
+      color: white;
+      font-size: 14px;
+      background: rgba(0, 0, 0, 0.7);
+      padding: 8px 15px;
+      border-radius: 20px;
+      font-family: Arial, sans-serif;
+      display: none; /* Oculto por defecto */
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0% { opacity: 0.7; }
+      50% { opacity: 1; }
+      100% { opacity: 0.7; }
+    }
+    
+    /* Ocultar completamente el audio */
+    #bgMusic {
+      display: none;
+    }
+  </style>
 </head>
 <body>
   <!-- Canvas para partículas 3D -->
@@ -22,18 +50,180 @@
     </div>
   </div>
 
+  <!-- Audio oculto (se reproduce automáticamente en loop) -->
+  <audio id="bgMusic" loop preload="auto">
+    <source src="assets/sounds/Ciudad de la Furia Sound.mp3" type="audio/mpeg">
+    <source src="assets/sounds/Ciudad de la Furia Sound.mp3" type="audio/ogg">
+    <!-- Fallback si no hay audio -->
+  </audio>
+  
+  <!-- Mensaje de carga (opcional) -->
+  <div class="music-loading" id="musicLoading">🎵 Cargando música...</div>
+
   <!-- Librerías -->
   <script src="https://cdn.jsdelivr.net/npm/three@0.148.0/build/three.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   
   <!-- Sistema de partículas 3D -->
-  <script src="bg.js"></script>
-
-  <!-- Navegación -->
+  <script src="js/bg.js"></script>
+  
+  <!-- Script para música automática -->
   <script>
-    document.getElementById("logo-navegacion").addEventListener("click", function() {
-      window.location.href = "modulo.html";
-    });
+    // MÚSICA AUTOMÁTICA SIN CONTROLES
+    (function() {
+      'use strict';
+      
+      const audio = document.getElementById('bgMusic');
+      const musicLoading = document.getElementById('musicLoading');
+      
+      // Configuración
+      audio.volume = 0.7; // Volumen al 70% (ajusta entre 0 y 1)
+      audio.loop = true; // Loop infinito
+      audio.autoplay = true; // Intentar autoplay
+      audio.preload = 'auto'; // Pre-cargar
+      
+      // Mostrar mensaje de carga
+      musicLoading.style.display = 'block';
+      
+      // Intentar reproducir automáticamente
+      function iniciarMusica() {
+        const playPromise = audio.play();
+        
+        if (playPromise !== undefined) {
+          playPromise
+            .then(() => {
+              // Éxito: música iniciada
+              console.log('✅ Música iniciada automáticamente');
+              musicLoading.style.display = 'none';
+            })
+            .catch(error => {
+              // Falló autoplay, necesitamos interacción del usuario
+              console.log('⚠️ Autoplay bloqueado. Esperando interacción...');
+              
+              // Estrategia 1: Intentar con clic en cualquier parte
+              document.body.addEventListener('click', function iniciarConClic() {
+                audio.play()
+                  .then(() => {
+                    console.log('✅ Música iniciada por clic');
+                    musicLoading.style.display = 'none';
+                  })
+                  .catch(e => console.error('❌ Error al iniciar con clic:', e));
+                
+                // Remover el listener después del primer clic
+                document.body.removeEventListener('click', iniciarConClic);
+              }, { once: true });
+              
+              // Estrategia 2: Intentar con el logo
+              document.getElementById('logo-navegacion').addEventListener('click', function iniciarConLogo() {
+                audio.play()
+                  .then(() => {
+                    console.log('✅ Música iniciada por logo');
+                    musicLoading.style.display = 'none';
+                  });
+              }, { once: true });
+              
+              // Estrategia 3: Intentar automáticamente después de 2 segundos
+              setTimeout(() => {
+                audio.play().catch(e => {
+                  console.log('⚠️ Aún no se puede reproducir...');
+                });
+              }, 2000);
+            });
+        }
+      }
+      
+      // Evento cuando la canción se carga
+      audio.addEventListener('loadeddata', () => {
+        console.log('🎵 Audio cargado, intentando reproducir...');
+        iniciarMusica();
+      });
+      
+      // Evento de error
+      audio.addEventListener('error', (e) => {
+        console.error('❌ Error cargando audio:', audio.error);
+        musicLoading.textContent = '❌ Error cargando música';
+        musicLoading.style.background = 'rgba(255, 50, 50, 0.7)';
+        
+        // Verificar el error
+        switch(audio.error.code) {
+          case 1:
+            console.error('MEDIA_ERR_ABORTED: El usuario canceló');
+            break;
+          case 2:
+            console.error('MEDIA_ERR_NETWORK: Error de red');
+            break;
+          case 3:
+            console.error('MEDIA_ERR_DECODE: Error al decodificar');
+            break;
+          case 4:
+            console.error('MEDIA_ERR_SRC_NOT_SUPPORTED: Formato no soportado o archivo no encontrado');
+            console.log('🔍 Verifica que assets/musica.mp3 existe');
+            break;
+        }
+      });
+      
+      // Evento cuando empieza a reproducir
+      audio.addEventListener('play', () => {
+        console.log('▶️ Música reproduciéndose en loop');
+      });
+      
+      // Evento para cada loop
+      audio.addEventListener('ended', () => {
+        console.log('🔄 Loop completado, reiniciando...');
+      });
+      
+      // Iniciar cuando la página cargue
+      window.addEventListener('DOMContentLoaded', () => {
+        console.log('🚀 Página cargada, iniciando música...');
+        
+        // Si el audio ya está listo, intentar reproducir
+        if (audio.readyState >= 2) { // HAVE_CURRENT_DATA o más
+          iniciarMusica();
+        }
+      });
+      
+      // EVITAR QUE EL USUARIO DETENGA LA MÚSICA
+      // 1. Remover controles de contexto
+      audio.removeAttribute('controls');
+      
+      // 2. Prevenir pausa con teclado
+      document.addEventListener('keydown', (e) => {
+        // Bloquear tecla espacio (pausa común)
+        if (e.code === 'Space' && e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+          e.preventDefault();
+        }
+        
+        // Bloquear atajos de medios (Play/Pause, Stop, etc.)
+        if (e.code === 'MediaPlayPause' || e.code === 'MediaStop') {
+          e.preventDefault();
+        }
+      });
+      
+      // 3. Forzar reanudación si alguien pausa el audio
+      let forcePlayInterval;
+      
+      function forzarReproduccion() {
+        if (audio.paused && !audio.ended) {
+          console.log('⚠️ Audio pausado, forzando reanudación...');
+          audio.play().catch(e => {
+            console.log('⚠️ No se pudo reanudar automáticamente');
+          });
+        }
+      }
+      
+      // Verificar cada segundo si el audio está pausado
+      setTimeout(() => {
+        forcePlayInterval = setInterval(forzarReproduccion, 1000);
+      }, 5000);
+      
+      // Limpiar intervalo cuando la página se cierre
+      window.addEventListener('beforeunload', () => {
+        if (forcePlayInterval) {
+          clearInterval(forcePlayInterval);
+        }
+      });
+      
+    })();
   </script>
 </body>
 </html>
